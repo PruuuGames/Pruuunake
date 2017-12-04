@@ -1,12 +1,18 @@
 package br.ufpe.cin.plc.pruuunake;
 
+import br.ufpe.cin.plc.views.GameFrame;
+
 public class Printer implements Runnable {
+
+	private GameFrame gameFrame;
 
 	private char[][] field;
 
 	private Snake[] players;
 
-	public Printer(char[][] field, Snake... players) {
+	public Printer(GameFrame gameFrame, char[][] field, Snake... players) {
+		this.gameFrame = gameFrame;
+
 		this.field = field;
 
 		this.players = players;
@@ -31,22 +37,7 @@ public class Printer implements Runnable {
 				}
 			}
 
-			System.out.println();
-			for (int i = 0; i < size + 2; ++i) {
-				for (int j = 0; j < size + 2; ++j) {
-					if ((i == 0 || i == size + 1) && j < size + 1) {
-						if (j < size - 1) {
-							System.out.print("##");
-						}
-					} else if (j == 0) {
-						System.out.print("#");
-					} else if (j == size + 1) {
-						System.out.println("#");
-					} else {
-						System.out.printf("%c%s", temp[i - 1][j - 1], j < size - 2 ? " " : "");
-					}
-				}
-			}
+			gameFrame.setField(temp);
 
 			try {
 				Thread.sleep(500);

@@ -32,6 +32,10 @@ public enum Direction {
 		this.y = y;
 	}
 
+	public int getCode() {
+		return code;
+	}
+
 	public int getX() {
 		return this.x;
 	}

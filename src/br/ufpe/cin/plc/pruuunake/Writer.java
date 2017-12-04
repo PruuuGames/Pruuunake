@@ -31,9 +31,19 @@ public class Writer implements Runnable {
 		}
 	}
 
-	public void queueMove(int move) {
+	public void queueTurn(Direction direction) {
 		try {
-			queue.put(move);
+			queue.put(direction.getCode());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void queuePizza(int y, int x) {
+		try {
+			queue.put(0);
+			queue.put(y);
+			queue.put(x);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

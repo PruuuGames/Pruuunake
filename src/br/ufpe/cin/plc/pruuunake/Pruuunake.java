@@ -6,6 +6,8 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import br.ufpe.cin.plc.views.GameFrame;
+
 public class Pruuunake {
 
 	public static final int PORT = 6666;
@@ -16,11 +18,11 @@ public class Pruuunake {
 
 	private AtomicBoolean pizza;
 
-	public static void main(String[] args) {
-		new Pruuunake();
-	}
+	private Snake player;
 
-	public Pruuunake() {
+	private Writer writer;
+
+	public Pruuunake(GameFrame gameFrame) {
 		this.field = new char[SIZE][SIZE];
 
 		for (int i = 0; i < SIZE; ++i) {
@@ -36,16 +38,18 @@ public class Pruuunake {
 		System.out.println("Digite 0 para ser o servidor ou digite o ip do outro jogador:");
 		String ip = scanner.next();
 
-		Reader reader = null;
-		Writer writer = null;
+		scanner.close();
 
-		Snake player = null;
+		Reader reader = null;
+		writer = null;
+
+		player = null;
 		Snake other = null;
 
 		if (!ip.equals("0")) {
 			try {
-				player = new Snake('A', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
-				other = new Snake('B', 0, 0, Direction.DOWN, pizza, field);
+				player = new Snake('a', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+				other = new Snake('b', 0, 0, Direction.DOWN, pizza, field);
 
 				System.out.println("Tentando se concetar ao outro jogador...");
 				Socket socket = new Socket(ip, PORT);
@@ -60,8 +64,8 @@ public class Pruuunake {
 				e.printStackTrace();
 			}
 		} else {
-			player = new Snake('A', 0, 0, Direction.DOWN, pizza, field);
-			other = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+			player = new Snake('a', 0, 0, Direction.DOWN, pizza, field);
+			other = new Snake('b', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
 
 			System.out.println("Aguardando conexão...");
 			PruuuServer pruuuServer = new PruuuServer();
@@ -73,16 +77,17 @@ public class Pruuunake {
 
 		new Thread(reader).start();
 		new Thread(writer).start();
-		new Thread(new Printer(field, player, other)).start();
+		new Thread(new Printer(gameFrame, field, player, other)).start();
+	}
 
-		int move;
-		while ((move = scanner.nextInt()) != -1) {
-			writer.queueMove(move);
+	public Direction getPlayerDirection() {
+		return player.getDirection();
+	}
 
-			player.turn(Direction.fromCode(move));
-		}
+	public void turn(Direction direction) {
+		writer.queueTurn(direction);
 
-		scanner.close();
+		player.turn(direction);
 	}
 
 }

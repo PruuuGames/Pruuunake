@@ -44,9 +44,7 @@ public class Pizzeria implements Runnable {
 				}
 			}
 
-			writer.queueMove(0);
-			writer.queueMove(y);
-			writer.queueMove(x);
+			writer.queuePizza(y, x);
 
 			synchronized (field) {
 				field[y][x] = 'X';
