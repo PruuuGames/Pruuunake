@@ -18,22 +18,25 @@ public class Field extends JPanel {
 	private JButton[][] field;
 
 	public Field(char[][] field) {
-		this.rows = field.length;
-		this.columns = field[0].length;
+		this.rows = 20;
+		this.columns = 20;
 
 		this.field = new JButton[rows][columns];
 
-		initializeField(field);
+		setBackground(new Color(44, 62, 80));
+		initializeField();
 		buildField(field);
 	}
 
-	public void initializeField(char[][] field) {
-		for (int row = 0; row < rows; row++) {
-			for (int column = 0; column < columns; column++) {
-				this.field[row][column] = new JButton();
-				this.field[row][column].setBounds(row * BUTTON_WIDTH, column * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-				add(this.field[row][column]);
-				setBackground(Color.PINK);
+	public void initializeField() {
+		for (int x = 0; x < rows; x++) {
+			for (int y = 0; y < columns; y++) {
+				field[x][y] = new JButton();
+				// field[x][y].setBounds(x * BUTTON_WIDTH, y * BUTTON_HEIGHT, 100, 100);
+				field[x][y].setEnabled(false);
+				add(field[x][y]);
+				field[x][y].setRequestFocusEnabled(false);
+
 			}
 		}
 	}
