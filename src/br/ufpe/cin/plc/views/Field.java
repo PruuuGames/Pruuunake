@@ -33,6 +33,7 @@ public class Field extends JPanel {
 				this.field[row][column] = new JButton();
 				this.field[row][column].setBounds(row * BUTTON_WIDTH, column * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 				add(this.field[row][column]);
+				setBackground(Color.PINK);
 			}
 		}
 	}
@@ -44,16 +45,16 @@ public class Field extends JPanel {
 					this.field[row][column].setBackground(Color.WHITE);
 
 				} else if (field[row][column] == 'A') {
-					this.field[row][column].setBackground(Color.BLUE);
+					this.field[row][column].setBackground(Color.PINK);
 
 				} else if (field[row][column] == 'B') {
-					this.field[row][column].setBackground(Color.RED);
+					this.field[row][column].setBackground(Color.BLUE);
 
 				} else if (field[row][column] == 'a') {
-					this.field[row][column].setIcon(new ImageIcon("src/br/ufpe/cin/pombo.jpg"));
+					this.field[row][column].setIcon(new ImageIcon("src/br/ufpe/cin/pruuA.jpg"));
 
 				} else if (field[row][column] == 'b') {
-					this.field[row][column].setIcon(new ImageIcon("src/br/ufpe/cin/pombo.jpg"));
+					this.field[row][column].setIcon(new ImageIcon("src/br/ufpe/cin/pruuB.jpg"));
 
 				} else if (field[row][column] == 'X') {
 					this.field[row][column].setIcon(new ImageIcon("src/br/ufpe/cin/pizza.png"));
