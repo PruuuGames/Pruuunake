@@ -1,4 +1,4 @@
-package game;
+package br.ufpe.cin.plc.pruuunake;
 
 import java.io.DataInputStream;
 import java.io.IOException;

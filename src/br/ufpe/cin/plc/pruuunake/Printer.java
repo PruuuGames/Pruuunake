@@ -1,4 +1,4 @@
-package game;
+package br.ufpe.cin.plc.pruuunake;
 
 public class Printer implements Runnable {
 
