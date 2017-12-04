@@ -6,13 +6,16 @@ import javax.swing.JPanel;
 
 public class Game extends javax.swing.JFrame {
 
+	private JPanel mainPanel;
+
 	public Game() {
 		Initialize();
 
 	}
 
 	public void Initialize() {
-		JPanel mainPanel = new JPanel();
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		mainPanel = new JPanel();
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 
 		javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
