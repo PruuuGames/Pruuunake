@@ -4,28 +4,32 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Pruuunake {
 
 	public static final int PORT = 6666;
 
+	public static final int SIZE = 20;
+
 	private char[][] field;
 
-	private int ax;
-	private int ay;
+	private AtomicBoolean pizza;
 
 	public static void main(String[] args) {
 		new Pruuunake();
 	}
 
 	public Pruuunake() {
-		this.field = new char[10][10];
+		this.field = new char[SIZE][SIZE];
 
-		for (int i = 0; i < 10; ++i) {
-			for (int j = 0; j < 10; ++j) {
+		for (int i = 0; i < SIZE; ++i) {
+			for (int j = 0; j < SIZE; ++j) {
 				field[i][j] = ' ';
 			}
 		}
+
+		this.pizza = new AtomicBoolean(false);
 
 		Scanner scanner = new Scanner(System.in);
 
@@ -35,19 +39,20 @@ public class Pruuunake {
 		Reader reader = null;
 		Writer writer = null;
 
+		Snake player = null;
+		Snake other = null;
+
 		if (!ip.equals("0")) {
 			try {
-				this.ax = 9;
-				this.ay = 9;
-
-				this.field[ay][ax] = 'A';
+				player = new Snake('A', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+				other = new Snake('B', 0, 0, Direction.DOWN, pizza, field);
 
 				System.out.println("Tentando se concetar ao outro jogador...");
 				Socket socket = new Socket(ip, PORT);
 				System.out.println("Conexão estabelecida");
 				PruuuClient pruuuClient = new PruuuClient(socket);
 
-				reader = new Reader(0, 0, field, pruuuClient.getInputStream());
+				reader = new Reader(other, field, pruuuClient.getInputStream());
 				writer = new Writer(pruuuClient.getOutputStream());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -55,39 +60,26 @@ public class Pruuunake {
 				e.printStackTrace();
 			}
 		} else {
-			this.ax = 0;
-			this.ay = 0;
-
-			this.field[ay][ax] = 'A';
+			player = new Snake('A', 0, 0, Direction.DOWN, pizza, field);
+			other = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
 
 			System.out.println("Aguardando conexão...");
 			PruuuServer pruuuServer = new PruuuServer();
 
-			reader = new Reader(9, 9, field, pruuuServer.getInputStream());
+			reader = new Reader(other, field, pruuuServer.getInputStream());
 			writer = new Writer(pruuuServer.getOutputStream());
+			new Thread(new Pizzeria(writer, pizza, field)).start();
 		}
 
 		new Thread(reader).start();
 		new Thread(writer).start();
-		new Thread(new Printer(field)).start();
+		new Thread(new Printer(field, player, other)).start();
 
 		int move;
 		while ((move = scanner.nextInt()) != -1) {
 			writer.queueMove(move);
 
-			synchronized (field) {
-				if (move == 1) {
-					ax++;
-				} else if (move == 2) {
-					ax--;
-				} else if (move == 3) {
-					ay++;
-				} else if (move == 4) {
-					ay--;
-				}
-
-				field[ax][ay] = 'A';
-			}
+			player.turn(Direction.fromCode(move));
 		}
 
 		scanner.close();

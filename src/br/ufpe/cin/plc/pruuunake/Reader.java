@@ -5,18 +5,16 @@ import java.io.IOException;
 
 public class Reader implements Runnable {
 
-	private int bx;
-	private int by;
+	private Snake player;
+
 	private char[][] field;
 
 	private DataInputStream dis;
 
-	public Reader(int bx, int by, char[][] field, DataInputStream dis) {
-		this.bx = bx;
-		this.by = by;
-		this.field = field;
+	public Reader(Snake player, char[][] field, DataInputStream dis) {
+		this.player = player;
 
-		this.field[bx][by] = 'B';
+		this.field = field;
 
 		this.dis = dis;
 	}
@@ -26,18 +24,12 @@ public class Reader implements Runnable {
 		try {
 			int move;
 			while ((move = dis.readInt()) != -1) {
-				synchronized (field) {
-					if (move == 1) {
-						bx++;
-					} else if (move == 2) {
-						bx--;
-					} else if (move == 3) {
-						by++;
-					} else if (move == 4) {
-						by--;
+				if (move == 0) {
+					synchronized (field) {
+						field[dis.readInt()][dis.readInt()] = 'X';
 					}
-
-					field[bx][by] = 'B';
+				} else {
+					player.turn(Direction.fromCode(move));
 				}
 			}
 		} catch (IOException e) {
