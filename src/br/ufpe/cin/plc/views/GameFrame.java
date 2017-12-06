@@ -1,10 +1,12 @@
 package br.ufpe.cin.plc.views;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -64,6 +66,8 @@ public class GameFrame implements ActionListener, KeyListener {
 		mainPanel.setLocationRelativeTo(null);
 		mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainPanel.addKeyListener(this);
+		mainPanel.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+		
 		timer.start();
 	}
 
