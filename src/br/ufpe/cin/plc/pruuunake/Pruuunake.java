@@ -48,8 +48,8 @@ public class Pruuunake {
 
 		if (!ip.equals("0")) {
 			try {
-				player = new Snake('a', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
-				other = new Snake('b', 0, 0, Direction.DOWN, pizza, field);
+				player = new Snake('A', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+				other = new Snake('B', 0, 0, Direction.DOWN, pizza, field);
 
 				System.out.println("Tentando se concetar ao outro jogador...");
 				Socket socket = new Socket(ip, PORT);
@@ -64,8 +64,8 @@ public class Pruuunake {
 				e.printStackTrace();
 			}
 		} else {
-			player = new Snake('a', 0, 0, Direction.DOWN, pizza, field);
-			other = new Snake('b', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+			player = new Snake('A', 0, 0, Direction.DOWN, pizza, field);
+			other = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
 
 			System.out.println("Aguardando conexão...");
 			PruuuServer pruuuServer = new PruuuServer();

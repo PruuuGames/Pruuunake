@@ -1,9 +1,7 @@
 package br.ufpe.cin.plc.views;
 
 import java.awt.Color;
-import java.awt.Image;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -54,22 +52,13 @@ public class Field extends JPanel {
 					this.field[row][column].setBackground(Color.WHITE);
 
 				} else if (field[row][column] == 'A') {
-					this.field[row][column].setBackground(Color.PINK);
+					this.field[row][column].setBackground(Color.RED);
 
 				} else if (field[row][column] == 'B') {
 					this.field[row][column].setBackground(Color.BLUE);
 
-				} else if (field[row][column] == 'a') {
-					this.field[row][column]
-							.setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT)));
-
-				} else if (field[row][column] == 'b') {
-					this.field[row][column]
-							.setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuB.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT)));
-
 				} else if (field[row][column] == 'X') {
-					this.field[row][column]
-							.setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pizza.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT)));
+					this.field[row][column].setBackground(Color.GREEN);
 				}
 			}
 		}
