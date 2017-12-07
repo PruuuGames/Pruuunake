@@ -3,6 +3,7 @@ package br.ufpe.cin.plc.pruuunake;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 
 public class ServerReader implements Reader {
 
@@ -23,6 +24,8 @@ public class ServerReader implements Reader {
 			while ((move = dis.readInt()) != -1) {
 				player2.turn(move);
 			}
+		} catch (SocketException e) {
+			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

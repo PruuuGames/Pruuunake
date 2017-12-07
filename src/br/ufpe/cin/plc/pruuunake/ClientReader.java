@@ -3,6 +3,7 @@ package br.ufpe.cin.plc.pruuunake;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.SocketException;
 import java.util.concurrent.locks.Lock;
 
 public class ClientReader implements Reader {
@@ -49,6 +50,8 @@ public class ClientReader implements Reader {
 
 				clientWriter.clearQueue();
 			}
+		} catch (SocketException e) {
+			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

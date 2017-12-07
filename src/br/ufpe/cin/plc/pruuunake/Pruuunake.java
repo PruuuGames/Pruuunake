@@ -7,7 +7,7 @@ public class Pruuunake {
 
 	public static final int PORT = 6666;
 
-	public static final int SIZE = 20;
+	public static final int SIZE = 40;
 
 	private static Pruuunake INSTANCE;
 

@@ -3,6 +3,7 @@ package br.ufpe.cin.plc.pruuunake;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -25,6 +26,8 @@ public class ClientWriter implements Writer {
 			while ((move = queue.take()) != -1) {
 				dos.writeInt(move);
 			}
+		} catch (SocketException e) {
+			System.exit(0);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -3,6 +3,7 @@ package br.ufpe.cin.plc.pruuunake;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.util.concurrent.locks.Lock;
 
 public class ServerWriter implements Writer {
@@ -55,6 +56,8 @@ public class ServerWriter implements Writer {
 
 				Thread.sleep(10);
 			}
+		} catch (SocketException e) {
+			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {

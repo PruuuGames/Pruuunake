@@ -58,7 +58,8 @@ public class GameFrame implements ActionListener, KeyListener {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(this);
-		frame.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage());
+		frame.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.png").getImage());
+		frame.requestFocus();
 
 		timer.start();
 	}
