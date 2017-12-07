@@ -1,8 +1,10 @@
 package br.ufpe.cin.plc.views;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.concurrent.locks.Lock;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +23,10 @@ public class RenderField extends JPanel {
 
 	private JButton[][] field;
 	
-	
+	private JLabel title;
+	private JLabel scoreA;
+	private JLabel scoreB;
+	private JLabel pruuu;
 
 	public RenderField() {
 		super();
@@ -31,15 +36,18 @@ public class RenderField extends JPanel {
 
 		this.field = new JButton[rows][columns];
 		
+		this.title = new JLabel("PRUUUNAKE");
+		this.scoreA = new JLabel("RED current score is: 0");
+		this.scoreB = new JLabel("BLUE current score is: 0");
+		this.pruuu = new JLabel(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg"));
+		
 		add( new JLabel("What is your name"));
 		setBounds(0, 0, 800, 800);
 		setBackground(new Color(44, 62, 80));
 		setLayout(null);
 
 		initializeField();
-		
-		
-		
+				
 		buildField();
 	}
 
@@ -55,12 +63,27 @@ public class RenderField extends JPanel {
 			}
 		}
 		
-		JLabel label = new JLabel("TESTE");
-		label.setBounds(900, 300, 100, 100);
-		label.setBackground(Color.WHITE);
-		add(label);
+		title.setBounds(rows * BUTTON_WIDTH + 95, BUTTON_HEIGHT, 500, 100);
+		title.setForeground(Color.WHITE);
+		title.setFont(new Font("Verdana", Font.BOLD, 30));
+		
+		scoreA.setBounds(rows * BUTTON_WIDTH + 65, BUTTON_HEIGHT + 100, 500, 100);
+		scoreA.setForeground(Color.WHITE);
+		scoreA.setFont(new Font("Verdana", Font.BOLD, 20));
+		
+		scoreB.setBounds(rows * BUTTON_WIDTH + 65, BUTTON_HEIGHT + 200, 500, 100);
+		scoreB.setForeground(Color.WHITE);
+		scoreB.setFont(new Font("Verdana", Font.BOLD, 20));
+		
+		pruuu.setBounds(rows * BUTTON_WIDTH - 50, BUTTON_HEIGHT + 400, 500, 500);
+		
+		add(title);
+		add(scoreA);
+		add(scoreB);
+		add(pruuu);
 	}
 
+	
 	public void buildField() {
 		Pruuunake pruuunake = Pruuunake.getInstance();
 		Field field = pruuunake.getField();
@@ -90,5 +113,12 @@ public class RenderField extends JPanel {
 
 		lock.unlock();
 	}
-
+	
+	public void updateScoreA(int score) {
+		this.scoreA.setText("RED current score is: " + score);
+	}
+	
+	public void updateScoreB(int score) {
+		this.scoreA.setText("BLUE current score is: " + score);
+	}
 }
