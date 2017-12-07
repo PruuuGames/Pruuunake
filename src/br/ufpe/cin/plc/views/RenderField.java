@@ -126,7 +126,7 @@ public class RenderField extends JPanel {
 					this.field[row][column].setBackground(Color.BLUE);
 
 				} else if (data[row][column] == 'X') {
-					this.field[row][column].setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pizza.png").getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT)));
+					this.field[row][column].setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pizza2.png").getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT)));
 				}
 			}
 		}
