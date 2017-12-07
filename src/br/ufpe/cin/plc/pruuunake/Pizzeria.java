@@ -1,56 +1,79 @@
 package br.ufpe.cin.plc.pruuunake;
 
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Pizzeria implements Runnable {
 
 	private static final Random RANDOM = new Random();
 
-	private Writer writer;
+	private Field field;
 
-	private AtomicBoolean pizza;
+	private Point pizza;
 
-	private char[][] field;
+	private Lock lock;
 
-	public Pizzeria(Writer writer, AtomicBoolean pizza, char[][] field) {
-		this.writer = writer;
+	public Pizzeria() {
+		this.field = Pruuunake.getInstance().getField();
 
-		this.pizza = pizza;
+		this.pizza = null;
 
-		this.field = field;
+		this.lock = new ReentrantLock();
+	}
+
+	public Lock getLock() {
+		return this.lock;
 	}
 
 	@Override
 	public void run() {
-		while (true) {
-			if (pizza.get()) {
-				continue;
-			}
-
-			int size = Pruuunake.SIZE;
-
-			int x = -1;
-			int y = -1;
-
+		try {
 			while (true) {
-				x = RANDOM.nextInt(size);
-				y = RANDOM.nextInt(size);
+				Lock fieldLock = field.getLock();
 
-				synchronized (field) {
-					if (field[y][x] == ' ') {
-						break;
+				boolean l1 = fieldLock.tryLock();
+				boolean l2 = lock.tryLock();
+
+				while (!l1 || !l2) {
+					if (l1) {
+						fieldLock.unlock();
 					}
+
+					if (l2) {
+						lock.unlock();
+					}
+
+					l1 = fieldLock.tryLock();
+					l2 = lock.tryLock();
 				}
+
+				char[][] data = field.getData();
+
+				if (pizza == null) {
+					int x, y;
+
+					while (true) {
+						x = RANDOM.nextInt(Pruuunake.SIZE);
+						y = RANDOM.nextInt(Pruuunake.SIZE);
+
+						if (data[x][y] == ' ') {
+							break;
+						}
+					}
+
+					pizza = new Point(x, y);
+				}
+
+				data[pizza.getX()][pizza.getY()] = 'X';
+
+				fieldLock.unlock();
+				lock.unlock();
+
+				Thread.sleep(10);
 			}
-
-			writer.queuePizza(y, x);
-
-			synchronized (field) {
-				field[y][x] = 'X';
-			}
-
-			pizza.set(true);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 

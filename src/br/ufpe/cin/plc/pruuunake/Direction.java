@@ -1,14 +1,17 @@
 package br.ufpe.cin.plc.pruuunake;
 
+import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public enum Direction {
 
-	UP(8, -1, 0),
-	RIGHT(6, 0, 1),
-	DOWN(2, 1, 0),
-	LEFT(4, 0, -1);
+	UP(0, -1, KeyEvent.VK_W, KeyEvent.VK_UP),
+	RIGHT(1, 0, KeyEvent.VK_D, KeyEvent.VK_RIGHT),
+	DOWN(0, 1, KeyEvent.VK_S, KeyEvent.VK_DOWN),
+	LEFT(-1, 0, KeyEvent.VK_A, KeyEvent.VK_LEFT);
 
 	private static Map<Integer, Direction> byCode;
 
@@ -16,24 +19,22 @@ public enum Direction {
 		byCode = new HashMap<Integer, Direction>();
 
 		for (Direction direction : values()) {
-			byCode.put(direction.code, direction);
+			for (int code : direction.getCodes()) {
+				byCode.put(code, direction);
+			}
 		}
 	}
-
-	private int code;
 
 	private int x;
 	private int y;
 
-	Direction(int code, int x, int y) {
-		this.code = code;
+	private Collection<Integer> codes;
 
+	Direction(int x, int y, Integer... codes) {
 		this.x = x;
 		this.y = y;
-	}
 
-	public int getCode() {
-		return code;
+		this.codes = Arrays.asList(codes);
 	}
 
 	public int getX() {
@@ -42,6 +43,10 @@ public enum Direction {
 
 	public int getY() {
 		return this.y;
+	}
+
+	public Collection<Integer> getCodes() {
+		return this.codes;
 	}
 
 	public Point process(Point point) {

@@ -1,8 +1,8 @@
 package br.ufpe.cin.plc.pruuunake;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,8 +10,8 @@ public class PruuuServer {
 
 	private ServerSocket serverSocket;
 
-	private DataInputStream dis;
-	private DataOutputStream dos;
+	private InputStream is;
+	private OutputStream os;
 
 	public PruuuServer() {
 		try {
@@ -19,19 +19,19 @@ public class PruuuServer {
 
 			Socket socket = serverSocket.accept();
 
-			this.dos = new DataOutputStream(socket.getOutputStream());
-			this.dis = new DataInputStream(socket.getInputStream());
+			this.os = socket.getOutputStream();
+			this.is = socket.getInputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public DataOutputStream getOutputStream() {
-		return dos;
+	public OutputStream getOutputStream() {
+		return os;
 	}
 
-	public DataInputStream getInputStream() {
-		return dis;
+	public InputStream getInputStream() {
+		return is;
 	}
 
 }

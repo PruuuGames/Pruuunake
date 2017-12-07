@@ -1,12 +1,16 @@
 package br.ufpe.cin.plc.views;
 
 import java.awt.Color;
+import java.util.concurrent.locks.Lock;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import br.ufpe.cin.plc.pruuunake.Field;
+import br.ufpe.cin.plc.pruuunake.Pruuunake;
+
 @SuppressWarnings("serial")
-public class Field extends JPanel {
+public class RenderField extends JPanel {
 
 	private static final int BUTTON_WIDTH = 40;
 	private static final int BUTTON_HEIGHT = 40;
@@ -16,7 +20,7 @@ public class Field extends JPanel {
 
 	private JButton[][] field;
 
-	public Field(char[][] field) {
+	public RenderField() {
 		super();
 
 		this.rows = 20;
@@ -29,7 +33,8 @@ public class Field extends JPanel {
 		setLayout(null);
 
 		initializeField();
-		buildField(field);
+
+		buildField();
 	}
 
 	public void initializeField() {
@@ -45,23 +50,34 @@ public class Field extends JPanel {
 		}
 	}
 
-	public void buildField(char[][] field) {
+	public void buildField() {
+		Pruuunake pruuunake = Pruuunake.getInstance();
+		Field field = pruuunake.getField();
+
+		Lock lock = field.getLock();
+
+		lock.lock();
+
+		char[][] data = field.getData();
+
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
-				if (field[row][column] == ' ') {
+				if (data[row][column] == ' ') {
 					this.field[row][column].setBackground(Color.WHITE);
 
-				} else if (field[row][column] == 'A') {
+				} else if (data[row][column] == 'A') {
 					this.field[row][column].setBackground(Color.RED);
 
-				} else if (field[row][column] == 'B') {
+				} else if (data[row][column] == 'B') {
 					this.field[row][column].setBackground(Color.BLUE);
 
-				} else if (field[row][column] == 'X') {
+				} else if (data[row][column] == 'X') {
 					this.field[row][column].setBackground(Color.GREEN);
 				}
 			}
 		}
+
+		lock.unlock();
 	}
 
 }

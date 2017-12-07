@@ -1,12 +1,7 @@
 package br.ufpe.cin.plc.pruuunake;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import br.ufpe.cin.plc.views.GameFrame;
+import java.util.Deque;
+import java.util.concurrent.locks.Lock;
 
 public class Pruuunake {
 
@@ -14,83 +9,111 @@ public class Pruuunake {
 
 	public static final int SIZE = 20;
 
-	public static long time;
+	private static Pruuunake INSTANCE;
 
-	private char[][] field;
+	public static Pruuunake getInstance() {
+		return INSTANCE;
+	}
 
-	private AtomicBoolean pizza;
+	private Field field;
 
-	private Snake player;
+	private Snake player1;
+	private Snake player2;
 
+	private Reader reader;
 	private Writer writer;
+	private Pizzeria pizzeria;
 
-	public Pruuunake(GameFrame gameFrame) {
-		this.field = new char[SIZE][SIZE];
+	public Pruuunake(String option) {
+		INSTANCE = this;
 
-		for (int i = 0; i < SIZE; ++i) {
-			for (int j = 0; j < SIZE; ++j) {
-				field[i][j] = ' ';
-			}
-		}
+		this.field = new Field();
 
-		this.pizza = new AtomicBoolean(false);
+		setup(option);
+	}
 
-		Scanner scanner = new Scanner(System.in);
+	public Field getField() {
+		return this.field;
+	}
 
-		System.out.println("Digite 0 para ser o servidor ou digite o ip do outro jogador:");
-		String ip = scanner.next();
+	public Snake getPlayer1() {
+		return this.player1;
+	}
 
-		scanner.close();
+	public Snake getPlayer2() {
+		return this.player2;
+	}
 
-		Reader reader = null;
-		writer = null;
+	public Reader getReader() {
+		return this.reader;
+	}
 
-		player = null;
-		Snake other = null;
+	public Writer getWriter() {
+		return this.writer;
+	}
 
-		time = System.currentTimeMillis();
-		if (!ip.equals("0")) {
-			try {
-				player = new Snake('A', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
-				other = new Snake('B', 0, 0, Direction.DOWN, pizza, field);
+	public Pizzeria getPizzeria() {
+		return this.pizzeria;
+	}
 
-				System.out.println("Tentando se concetar ao outro jogador...");
-				Socket socket = new Socket(ip, PORT);
-				System.out.println("Conexão estabelecida");
-				PruuuClient pruuuClient = new PruuuClient(socket);
+	public boolean isHost() {
+		return writer instanceof ServerWriter;
+	}
 
-				reader = new Reader(other, field, pruuuClient.getInputStream());
-				writer = new Writer(pruuuClient.getOutputStream());
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			player = new Snake('A', 0, 0, Direction.DOWN, pizza, field);
-			other = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
+	private void setup(String option) {
+		if (option.equals("0")) {
+			player1 = new Snake('A', 0, 0, Direction.DOWN);
+			player2 = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP);
+
+			Lock lock = field.getLock();
+
+			lock.lock();
+
+			char[][] data = field.getData();
+
+			data[0][0] = 'A';
+			data[SIZE - 1][SIZE - 1] = 'B';
+
+			lock.unlock();
 
 			System.out.println("Aguardando conexão...");
 			PruuuServer pruuuServer = new PruuuServer();
 
-			reader = new Reader(other, field, pruuuServer.getInputStream());
-			writer = new Writer(pruuuServer.getOutputStream());
-			new Thread(new Pizzeria(writer, pizza, field)).start();
+			writer = new ServerWriter(pruuuServer.getOutputStream());
+			reader = new ServerReader(pruuuServer.getInputStream());
+
+			new Thread(new Pizzeria()).start();
+		} else {
+			PruuuClient pruuuClient = new PruuuClient(option);
+
+			writer = new ClientWriter(pruuuClient.getOutputStream());
+			reader = new ClientReader(pruuuClient.getInputStream());
 		}
 
 		new Thread(reader).start();
 		new Thread(writer).start();
-		new Thread(new Printer(gameFrame, field, player, other)).start();
 	}
 
-	public Direction getPlayerDirection() {
-		return player.getDirection();
-	}
+	public void move(Snake player) {
+		Direction direction = player.getDirection();
+		Deque<Point> tail = player.getTail();
 
-	public void turn(Direction direction) {
-		writer.queueTurn(direction);
+		Point head = direction.process(player.getHead());
+		head.ensureBounds();
+		tail.addLast(head);
 
-		player.turn(direction);
+		Point last = tail.removeFirst();
+
+		Lock lock = field.getLock();
+
+		lock.lock();
+
+		char[][] data = field.getData();
+
+		data[last.getX()][last.getY()] = ' ';
+		data[head.getX()][head.getY()] = player.getId();
+
+		lock.unlock();
 	}
 
 }

@@ -1,21 +1,28 @@
 package br.ufpe.cin.plc.pruuunake;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class PruuuClient {
 
 	private Socket socket;
 
-	public PruuuClient(Socket socket) {
-		this.socket = socket;
+	public PruuuClient(String ip) {
+		try {
+			this.socket = new Socket(ip, Pruuunake.PORT);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public DataOutputStream getOutputStream() {
+	public OutputStream getOutputStream() {
 		try {
-			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+			OutputStream dos = socket.getOutputStream();
 
 			return dos;
 		} catch (IOException e) {
@@ -25,9 +32,9 @@ public class PruuuClient {
 		return null;
 	}
 
-	public DataInputStream getInputStream() {
+	public InputStream getInputStream() {
 		try {
-			DataInputStream dis = new DataInputStream(socket.getInputStream());
+			InputStream dis = socket.getInputStream();
 
 			return dis;
 		} catch (IOException e) {

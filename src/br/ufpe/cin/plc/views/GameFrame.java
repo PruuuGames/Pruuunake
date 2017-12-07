@@ -5,13 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-import br.ufpe.cin.plc.pruuunake.Direction;
+import br.ufpe.cin.plc.pruuunake.ClientWriter;
 import br.ufpe.cin.plc.pruuunake.Pruuunake;
+import br.ufpe.cin.plc.pruuunake.Snake;
 
 public class GameFrame implements ActionListener, KeyListener {
 
@@ -27,17 +29,15 @@ public class GameFrame implements ActionListener, KeyListener {
 	}
 
 	public static void main(String[] args) {
-		INSTANCE = new GameFrame();
-	}
+		System.out.println("Digite 0 para ser o servidor ou o ip do servidor:");
 
-	private char[][] field;
+		Scanner scanner = new Scanner(System.in);
 
-	public char[][] getField() {
-		return this.field;
-	}
+		String option = scanner.next();
 
-	public void setField(char[][] field) {
-		this.field = field;
+		scanner.close();
+
+		INSTANCE = new GameFrame(option);
 	}
 
 	public static GameFrame snake;
@@ -46,20 +46,14 @@ public class GameFrame implements ActionListener, KeyListener {
 
 	public JFrame mainPanel;
 
-	public Field render;
+	public RenderField render;
 
 	public Timer timer = new Timer(20, this);
 
-	public GameFrame() {
-		pruuunake = new Pruuunake(this);
+	public GameFrame(String option) {
+		pruuunake = new Pruuunake(option);
 
-		field = new char[FIELD_SIZE_X][FIELD_SIZE_Y];
-		for (int x = 0; x < FIELD_SIZE_X; x++) {
-			for (int y = 0; y < FIELD_SIZE_X; y++) {
-				field[x][y] = ' ';
-			}
-		}
-		mainPanel = new JFrame("GameFrame");
+		mainPanel = new JFrame("GameFrame " + pruuunake.isHost());
 		mainPanel.setVisible(true);
 		mainPanel.setSize(WIDTH, HEIGHT);
 		mainPanel.setResizable(false);
@@ -67,37 +61,27 @@ public class GameFrame implements ActionListener, KeyListener {
 		mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainPanel.addKeyListener(this);
 		mainPanel.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-		
+
 		timer.start();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		mainPanel.setContentPane(render = new Field(field));
+		mainPanel.setContentPane(render = new RenderField());
 		mainPanel.repaint();
 		mainPanel.revalidate();
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int i = e.getKeyCode();
+		if (pruuunake.isHost()) {
+			Snake player = pruuunake.getPlayer1();
 
-		Direction direction = pruuunake.getPlayerDirection();
+			player.turn(e.getKeyCode());
+		} else {
+			ClientWriter writer = (ClientWriter) pruuunake.getWriter();
 
-		if ((i == KeyEvent.VK_A || i == KeyEvent.VK_LEFT) && direction != Direction.DOWN) {
-			pruuunake.turn(Direction.UP);
-		}
-
-		if ((i == KeyEvent.VK_D || i == KeyEvent.VK_RIGHT) && direction != Direction.UP) {
-			pruuunake.turn(Direction.DOWN);
-		}
-
-		if ((i == KeyEvent.VK_W || i == KeyEvent.VK_UP) && direction != Direction.RIGHT) {
-			pruuunake.turn(Direction.LEFT);
-		}
-
-		if ((i == KeyEvent.VK_S || i == KeyEvent.VK_DOWN) && direction != Direction.LEFT) {
-			pruuunake.turn(Direction.RIGHT);
+			writer.queueTurn(e.getKeyCode());
 		}
 	}
 
