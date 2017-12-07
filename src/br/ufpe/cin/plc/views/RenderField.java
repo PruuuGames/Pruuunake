@@ -144,7 +144,7 @@ public class RenderField extends JPanel {
 		if (player1Score >= 10) {
 			overLabel2.setText("PLAYER 1 (PINK)");
 			add(overLabel1, 2, 0);
-			add(overLabel1, 2, 0);
+			add(overLabel2, 2, 0);
 
 			over = true;
 		} else if (player2Score >= 10) {
