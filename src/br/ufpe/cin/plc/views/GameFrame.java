@@ -1,7 +1,5 @@
 package br.ufpe.cin.plc.views;
 
-import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,7 +8,6 @@ import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import br.ufpe.cin.plc.pruuunake.ClientWriter;
@@ -21,8 +18,6 @@ public class GameFrame implements ActionListener, KeyListener {
 
 	private static final int HEIGHT = 829;
 	private static final int WIDTH = 1200;
-	private static final int FIELD_SIZE_X = 20;
-	private static final int FIELD_SIZE_Y = 20;
 
 	private static GameFrame INSTANCE;
 
@@ -46,7 +41,7 @@ public class GameFrame implements ActionListener, KeyListener {
 
 	public Pruuunake pruuunake;
 
-	public JFrame mainPanel;
+	public JFrame frame;
 
 	public RenderField render;
 
@@ -55,23 +50,24 @@ public class GameFrame implements ActionListener, KeyListener {
 	public GameFrame(String option) {
 		pruuunake = new Pruuunake(option);
 
-		mainPanel = new JFrame("GameFrame " + pruuunake.isHost());
-		mainPanel.setVisible(true);
-		mainPanel.setSize(WIDTH, HEIGHT);
-		mainPanel.setResizable(false);
-		mainPanel.setLocationRelativeTo(null);
-		mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainPanel.addKeyListener(this);
-		mainPanel.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+		frame = new JFrame("GameFrame " + pruuunake.isHost());
+		frame.setVisible(true);
+		frame.setAlwaysOnTop(true);
+		frame.setSize(WIDTH, HEIGHT);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addKeyListener(this);
+		frame.setIconImage(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.jpg").getImage());
 
 		timer.start();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		mainPanel.setContentPane(render = new RenderField());
-		mainPanel.repaint();
-		mainPanel.revalidate();
+		frame.setContentPane(render = new RenderField());
+		frame.repaint();
+		frame.revalidate();
 	}
 
 	@Override
