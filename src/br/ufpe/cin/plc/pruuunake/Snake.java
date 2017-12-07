@@ -6,11 +6,15 @@ import java.util.LinkedList;
 public class Snake {
 
 	private char id;
+	private int score;
+
 	private Direction direction;
 	private Deque<Point> body;
 
 	public Snake(char id, int x, int y, Direction direction) {
 		this.id = id;
+		this.score = 1;
+
 		this.direction = direction;
 		this.body = new LinkedList<Point>();
 
@@ -19,6 +23,10 @@ public class Snake {
 
 	public char getId() {
 		return this.id;
+	}
+
+	public int getScore() {
+		return this.score;
 	}
 
 	public Direction getDirection() {
@@ -31,6 +39,18 @@ public class Snake {
 
 	public Deque<Point> getBody() {
 		return this.body;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void incrementScore() {
+		score++;
+	}
+
+	public void decrementScore() {
+		score--;
 	}
 
 	public void turn(int keyCode) {

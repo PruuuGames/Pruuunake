@@ -50,7 +50,7 @@ public class GameFrame implements ActionListener, KeyListener {
 	public GameFrame(String option) {
 		pruuunake = new Pruuunake(option);
 
-		frame = new JFrame("GameFrame " + pruuunake.isHost());
+		frame = new JFrame("Pruuunake");
 		frame.setVisible(true);
 		frame.setAlwaysOnTop(true);
 		frame.setSize(WIDTH, HEIGHT);

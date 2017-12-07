@@ -29,15 +29,21 @@ public class ClientReader implements Reader {
 	@Override
 	public void run() {
 		try {
-			char[][] data;
-			while ((data = (char[][]) ois.readObject()) != null) {
+			FieldWrapper wrapper;
+			while ((wrapper = (FieldWrapper) ois.readObject()) != null) {
 				Field field = instance.getField();
 
 				Lock lock = field.getLock();
 
 				lock.lock();
 
-				field.setData(data);
+				field.setData(wrapper.getData());
+
+				Snake player1 = instance.getPlayer1();
+				Snake player2 = instance.getPlayer2();
+
+				player1.setScore(wrapper.getPlayer1Score());
+				player2.setScore(wrapper.getPlayer2Score());
 
 				lock.unlock();
 

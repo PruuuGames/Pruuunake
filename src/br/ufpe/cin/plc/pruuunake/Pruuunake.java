@@ -86,6 +86,9 @@ public class Pruuunake {
 
 			new Thread(pizzeria).start();
 		} else {
+			player1 = new Snake('A', 0, 0, Direction.DOWN);
+			player2 = new Snake('B', SIZE - 1, SIZE - 1, Direction.UP);
+			
 			PruuuClient pruuuClient = new PruuuClient(option);
 
 			writer = new ClientWriter(pruuuClient.getOutputStream());
@@ -134,6 +137,8 @@ public class Pruuunake {
 			data[last.getX()][last.getY()] = ' ';
 		} else {
 			pizzeria.eat();
+
+			player.incrementScore();
 		}
 
 		data[head.getX()][head.getY()] = player.getId();

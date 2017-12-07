@@ -46,17 +46,10 @@ public class ServerWriter implements Writer {
 				lock.lock();
 
 				char[][] data = field.getData();
+				
+				FieldWrapper wrapper = new FieldWrapper(data);
 
-				int size = data.length;
-				char[][] temp = new char[size][size];
-
-				for (int i = 0; i < size; i++) {
-					for (int j = 0; j < size; j++) {
-						temp[i][j] = data[i][j];
-					}
-				}
-
-				oos.writeObject(temp);
+				oos.writeObject(wrapper);
 
 				lock.unlock();
 
