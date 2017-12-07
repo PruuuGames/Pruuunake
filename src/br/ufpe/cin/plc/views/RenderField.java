@@ -101,7 +101,7 @@ public class RenderField extends JPanel {
 		scoreB.setForeground(Color.WHITE);
 		scoreB.setFont(new Font("Verdana", Font.BOLD, 20));
 
-		pruuu.setBounds(size * BUTTON_WIDTH - 42, BUTTON_HEIGHT + 400, 500, 500);
+		pruuu.setBounds(size * BUTTON_WIDTH - 48, BUTTON_HEIGHT + 400, 500, 500);
 
 		add(title);
 		add(scoreA);
