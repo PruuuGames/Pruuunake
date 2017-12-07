@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.concurrent.locks.Lock;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import br.ufpe.cin.plc.pruuunake.Field;
@@ -19,6 +20,8 @@ public class RenderField extends JPanel {
 	private int columns;
 
 	private JButton[][] field;
+	
+	
 
 	public RenderField() {
 		super();
@@ -27,13 +30,16 @@ public class RenderField extends JPanel {
 		this.columns = 20;
 
 		this.field = new JButton[rows][columns];
-
+		
+		add( new JLabel("What is your name"));
 		setBounds(0, 0, 800, 800);
 		setBackground(new Color(44, 62, 80));
 		setLayout(null);
 
 		initializeField();
-
+		
+		
+		
 		buildField();
 	}
 
@@ -48,6 +54,11 @@ public class RenderField extends JPanel {
 				add(field[x][y]);
 			}
 		}
+		
+		JLabel label = new JLabel("TESTE");
+		label.setBounds(900, 300, 100, 100);
+		label.setBackground(Color.WHITE);
+		add(label);
 	}
 
 	public void buildField() {
