@@ -37,14 +37,6 @@ public class ClientReader implements Reader {
 
 				lock.lock();
 
-				System.out.println();
-				System.out.println();
-				for (int i = 0; i < data.length; ++i) {
-					for (int j = 0; j < data.length; ++j) {
-						System.out.printf("%c%s", data[i][j] == ' ' ? '#' : data[i][j], j < data.length - 1 ? ' ' : '\n');
-					}
-				}
-
 				field.setData(data);
 
 				lock.unlock();

@@ -58,17 +58,9 @@ public class ServerWriter implements Writer {
 
 				oos.writeObject(temp);
 
-				System.out.println();
-				System.out.println();
-				for (int i = 0; i < data.length; ++i) {
-					for (int j = 0; j < data.length; ++j) {
-						System.out.printf("%c%s", data[i][j] == ' ' ? '#' : data[i][j], j < data.length - 1 ? ' ' : '\n');
-					}
-				}
-
 				lock.unlock();
 
-				Thread.sleep(1000);
+				Thread.sleep(250);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
