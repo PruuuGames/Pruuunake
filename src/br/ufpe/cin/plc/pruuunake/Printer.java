@@ -39,6 +39,7 @@ public class Printer implements Runnable {
 
 			gameFrame.setField(temp);
 
+			System.out.println(System.currentTimeMillis() - Pruuunake.time);
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {

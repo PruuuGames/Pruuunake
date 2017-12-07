@@ -14,6 +14,8 @@ public class Pruuunake {
 
 	public static final int SIZE = 20;
 
+	public static long time;
+
 	private char[][] field;
 
 	private AtomicBoolean pizza;
@@ -46,6 +48,7 @@ public class Pruuunake {
 		player = null;
 		Snake other = null;
 
+		time = System.currentTimeMillis();
 		if (!ip.equals("0")) {
 			try {
 				player = new Snake('A', SIZE - 1, SIZE - 1, Direction.UP, pizza, field);
