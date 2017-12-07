@@ -59,7 +59,7 @@ public class RenderField extends JPanel {
 		this.overLabel2 = new JLabel();
 		this.scoreA = new JLabel(SCORE_PINK + 0);
 		this.scoreB = new JLabel(SCORE_BLUE + 0);
-		this.pruuu = new JLabel(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuA.png"));
+		this.pruuu = new JLabel();
 
 		this.over = false;
 
@@ -78,8 +78,10 @@ public class RenderField extends JPanel {
 		title.setBounds(size * BUTTON_WIDTH + 95, BUTTON_HEIGHT, 500, 100);
 		if (instance.isHost()) {
 			title.setForeground(Color.PINK);
+			pruuu.setIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuA.png"));
 		} else {
 			title.setForeground(Color.BLUE);
+			pruuu.setIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuB.png"));
 		}
 		title.setFont(new Font("Verdana", Font.BOLD, 30));
 
@@ -141,13 +143,13 @@ public class RenderField extends JPanel {
 		scoreA.setText(SCORE_PINK + player1Score);
 		scoreB.setText(SCORE_BLUE + player2Score);
 
-		if (player1Score >= 10) {
+		if (player1Score >= 30) {
 			overLabel2.setText("PLAYER 1 (PINK)");
 			add(overLabel1, 2, 0);
 			add(overLabel2, 2, 0);
 
 			over = true;
-		} else if (player2Score >= 10) {
+		} else if (player2Score >= 30) {
 			overLabel2.setText("PLAYER 2 (BLUE)");
 			add(overLabel1, 2, 0);
 			add(overLabel2, 2, 0);
