@@ -60,8 +60,8 @@ public class Snake {
 			return;
 		}
 
-		if (newDirection != this.direction) {
-			this.direction = newDirection;
+		if (newDirection != direction && newDirection != direction.getOppositeDirection()) {
+			direction = newDirection;
 		}
 	}
 

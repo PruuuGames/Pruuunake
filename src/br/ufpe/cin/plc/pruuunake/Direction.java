@@ -27,7 +27,7 @@ public enum Direction {
 
 	private int x;
 	private int y;
-
+	
 	private Collection<Integer> codes;
 
 	Direction(int x, int y, Integer... codes) {
@@ -43,6 +43,21 @@ public enum Direction {
 
 	public int getY() {
 		return this.y;
+	}
+	
+	public Direction getOppositeDirection() {
+		switch(this) {
+		case UP:
+			return DOWN;
+		case DOWN:
+			return UP;
+		case RIGHT:
+			return LEFT;
+		case LEFT:
+			return RIGHT;
+		}
+		
+		return null;
 	}
 
 	public Collection<Integer> getCodes() {

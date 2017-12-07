@@ -20,19 +20,30 @@ public class RenderField extends JPanel {
 	private static final int BUTTON_WIDTH = 800 / Pruuunake.SIZE;
 	private static final int BUTTON_HEIGHT = 800 / Pruuunake.SIZE;
 
-	private static final String SCORE_RED = "RED current score is: ";
+	private static final String SCORE_PINK = "PINK current score is: ";
 	private static final String SCORE_BLUE = "BLUE current score is: ";
+
+	private static final ImageIcon PRUUU_A = new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuA.png")
+			.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT));
+	private static final ImageIcon PRUUU_B = new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuB.png")
+			.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT));
+	private static final ImageIcon PIZZA = new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pizza.png")
+			.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT));
 
 	private int size;
 
 	private JLabel[][] field;
-	
+
 	private Pruuunake instance;
 
 	private JLabel title;
+	private JLabel overLabel1;
+	private JLabel overLabel2;
 	private JLabel scoreA;
 	private JLabel scoreB;
 	private JLabel pruuu;
+
+	private boolean over;
 
 	public RenderField() {
 		super();
@@ -40,19 +51,22 @@ public class RenderField extends JPanel {
 		this.size = Pruuunake.SIZE;
 
 		this.field = new JLabel[size][size];
-		
-		this.instance = Pruuunake.getInstance();
-		
-		this.title = new JLabel("PRUUUNAKE");
-		this.scoreA = new JLabel(SCORE_RED + 0);
-		this.scoreB = new JLabel(SCORE_BLUE + 0);
-		this.pruuu = new JLabel(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuA.png"));
 
-		
-		setBounds(0, 0, 800, 800);		
-		
+		this.instance = Pruuunake.getInstance();
+
+		this.title = new JLabel("PRUUUNAKE");
+		this.overLabel1 = new JLabel("Game over. Winner is:");
+		this.overLabel2 = new JLabel();
+		this.scoreA = new JLabel(SCORE_PINK + 0);
+		this.scoreB = new JLabel(SCORE_BLUE + 0);
+		this.pruuu = new JLabel(new ImageIcon("src/br/ufpe/cin/plc/assets/pruuuA.png"));
+
+		this.over = false;
+
+		setBounds(0, 0, 800, 800);
+
 		setBackground(new Color(44, 62, 80));
-		
+
 		setLayout(null);
 
 		initializeField();
@@ -62,12 +76,20 @@ public class RenderField extends JPanel {
 
 	public void initializeField() {
 		title.setBounds(size * BUTTON_WIDTH + 95, BUTTON_HEIGHT, 500, 100);
-		if(instance.isHost()) {
-			title.setForeground(Color.RED);
+		if (instance.isHost()) {
+			title.setForeground(Color.PINK);
 		} else {
 			title.setForeground(Color.BLUE);
 		}
 		title.setFont(new Font("Verdana", Font.BOLD, 30));
+
+		overLabel1.setBounds((size * BUTTON_WIDTH + 400) / 2 - 400, (size * BUTTON_WIDTH) / 2 - 100, 800, 100);
+		overLabel1.setForeground(Color.BLACK);
+		overLabel1.setFont(new Font("Verdana", Font.BOLD, 40));
+
+		overLabel2.setBounds((size * BUTTON_WIDTH + 400) / 2 - 400, (size * BUTTON_WIDTH) / 2, 800, 100);
+		overLabel2.setForeground(Color.BLACK);
+		overLabel2.setFont(new Font("Verdana", Font.BOLD, 40));
 
 		scoreA.setBounds(size * BUTTON_WIDTH + 65, BUTTON_HEIGHT + 100, 500, 100);
 		scoreA.setForeground(Color.WHITE);
@@ -99,6 +121,10 @@ public class RenderField extends JPanel {
 	}
 
 	public void buildField() {
+		if (this.over) {
+			return;
+		}
+
 		Pruuunake pruuunake = Pruuunake.getInstance();
 		Field field = pruuunake.getField();
 
@@ -108,25 +134,42 @@ public class RenderField extends JPanel {
 
 		Snake player1 = pruuunake.getPlayer1();
 		Snake player2 = pruuunake.getPlayer2();
-		
-		scoreA.setText(SCORE_RED + player1.getScore());
-		scoreB.setText(SCORE_BLUE + player2.getScore());
 
-		char[][] data = field.getData();
+		int player1Score = player1.getScore();
+		int player2Score = player2.getScore();
 
-		for (int row = 0; row < size; row++) {
-			for (int column = 0; column < size; column++) {
-				if (data[row][column] == ' ') {
-					this.field[row][column].setBackground(Color.WHITE);
+		scoreA.setText(SCORE_PINK + player1Score);
+		scoreB.setText(SCORE_BLUE + player2Score);
 
-				} else if (data[row][column] == 'A') {
-					this.field[row][column].setBackground(Color.RED);
+		if (player1Score >= 10) {
+			overLabel2.setText("PLAYER 1 (PINK)");
+			add(overLabel1, 2, 0);
+			add(overLabel1, 2, 0);
 
-				} else if (data[row][column] == 'B') {
-					this.field[row][column].setBackground(Color.BLUE);
+			over = true;
+		} else if (player2Score >= 10) {
+			overLabel2.setText("PLAYER 2 (BLUE)");
+			add(overLabel1, 2, 0);
+			add(overLabel2, 2, 0);
 
-				} else if (data[row][column] == 'X') {
-					this.field[row][column].setIcon(new ImageIcon(new ImageIcon("src/br/ufpe/cin/plc/assets/pizza2.png").getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_DEFAULT)));
+			over = true;
+		} else {
+			char[][] data = field.getData();
+
+			for (int row = 0; row < size; row++) {
+				for (int column = 0; column < size; column++) {
+					if (data[row][column] == ' ') {
+						this.field[row][column].setBackground(Color.WHITE);
+
+					} else if (data[row][column] == 'A') {
+						this.field[row][column].setIcon(PRUUU_A);
+
+					} else if (data[row][column] == 'B') {
+						this.field[row][column].setIcon(PRUUU_B);
+
+					} else if (data[row][column] == 'X') {
+						this.field[row][column].setIcon(PIZZA);
+					}
 				}
 			}
 		}
