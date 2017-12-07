@@ -60,7 +60,7 @@ public class ServerWriter implements Writer {
 
 				lock.unlock();
 
-				Thread.sleep(250);
+				Thread.sleep(10);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
