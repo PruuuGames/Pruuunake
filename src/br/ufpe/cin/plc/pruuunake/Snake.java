@@ -7,14 +7,14 @@ public class Snake {
 
 	private char id;
 	private Direction direction;
-	private Deque<Point> tail;
+	private Deque<Point> body;
 
 	public Snake(char id, int x, int y, Direction direction) {
 		this.id = id;
 		this.direction = direction;
-		this.tail = new LinkedList<Point>();
+		this.body = new LinkedList<Point>();
 
-		this.tail.addLast(new Point(x, y));
+		this.body.addLast(new Point(x, y));
 	}
 
 	public char getId() {
@@ -26,11 +26,11 @@ public class Snake {
 	}
 
 	public Point getHead() {
-		return this.tail.getLast();
+		return this.body.getLast();
 	}
 
-	public Deque<Point> getTail() {
-		return this.tail;
+	public Deque<Point> getBody() {
+		return this.body;
 	}
 
 	public void turn(int keyCode) {

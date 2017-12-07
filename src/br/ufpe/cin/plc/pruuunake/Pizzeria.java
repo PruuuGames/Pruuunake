@@ -22,6 +22,10 @@ public class Pizzeria implements Runnable {
 		this.lock = new ReentrantLock();
 	}
 
+	public Point getPizza() {
+		return this.pizza;
+	}
+
 	public Lock getLock() {
 		return this.lock;
 	}
@@ -75,6 +79,10 @@ public class Pizzeria implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void eat() {
+		pizza = null;
 	}
 
 }

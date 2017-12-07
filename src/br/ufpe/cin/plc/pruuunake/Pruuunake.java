@@ -82,7 +82,9 @@ public class Pruuunake {
 			writer = new ServerWriter(pruuuServer.getOutputStream());
 			reader = new ServerReader(pruuuServer.getInputStream());
 
-			new Thread(new Pizzeria()).start();
+			pizzeria = new Pizzeria();
+
+			new Thread(pizzeria).start();
 		} else {
 			PruuuClient pruuuClient = new PruuuClient(option);
 
@@ -95,25 +97,49 @@ public class Pruuunake {
 	}
 
 	public void move(Snake player) {
+		Lock fieldLock = field.getLock();
+		Lock pizzaLock = pizzeria.getLock();
+
+		boolean l1 = fieldLock.tryLock();
+		boolean l2 = pizzaLock.tryLock();
+
+		while (!l1 || !l2) {
+			if (l1) {
+				fieldLock.unlock();
+			}
+
+			if (l2) {
+				pizzaLock.unlock();
+			}
+
+			l1 = fieldLock.tryLock();
+			l2 = pizzaLock.tryLock();
+		}
+
 		Direction direction = player.getDirection();
-		Deque<Point> tail = player.getTail();
+		Deque<Point> body = player.getBody();
 
 		Point head = direction.process(player.getHead());
 		head.ensureBounds();
-		tail.addLast(head);
-
-		Point last = tail.removeFirst();
-
-		Lock lock = field.getLock();
-
-		lock.lock();
+		body.addLast(head);
 
 		char[][] data = field.getData();
 
-		data[last.getX()][last.getY()] = ' ';
+		Point pizza = pizzeria.getPizza();
+		Point last;
+
+		if (!head.equals(pizza)) {
+			last = body.removeFirst();
+
+			data[last.getX()][last.getY()] = ' ';
+		} else {
+			pizzeria.eat();
+		}
+
 		data[head.getX()][head.getY()] = player.getId();
 
-		lock.unlock();
+		fieldLock.unlock();
+		pizzaLock.unlock();
 	}
 
 }
